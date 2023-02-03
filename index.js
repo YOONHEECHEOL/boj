@@ -2,19 +2,23 @@ const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 let input = fs.readFileSync(filePath).toString().split("\n");
 
-const solution = (param) => {
+const solution = (l, m) => {
 
-    let range = 1, block = 1;
-
-    while (block < input) {    
-    block += 6 * range;
-
-    range++;
+    const euclid = (a, b) => {
+        // a가 큰 수, b가 작은 수
+        let max = 0;
+    
+        let r = a % b;
+        if(r === 0) return b;
+        if(r !== 0) {
+            return euclid(b, r);
+        }
     }
 
-    return range;
+    let answer = euclid(l, m);
+    return answer;
 }
   
 
-console.log(solution(input));
+console.log(solution(12, 8));
 
