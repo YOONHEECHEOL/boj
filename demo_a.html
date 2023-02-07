@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo</title>
+  <script>
+    const props = () => { return { mst: { itemDc: ['0;0;-1;카테고리1', '1;1;0;범례1', '2;2;1;구분1', '1;3;0;범례2', '2;4;3;구분2', '2;5;3;구분3'], subSumDc: ['0;1;2', '0;3;5'], col: ['uuid', 'id', 'desc'] }, dtl: [{ tpSq: 2, uuid: 'SEQ0', id: '강아지', desc: '멍멍' }, { tpSq: 2, uuid: 'SEQ1', id: '고양이', desc: '냐옹' }, { tpSq: 4, uuid: 'SEQ2', id: '쥐', desc: '찍찍' }, { tpSq: 5, uuid: 'SEQ3', id: '코끼리', desc: '뿌우' }, { tpSq: 5, uuid: 'SEQ4', id: '사슴', desc: '사슴사슴' }, { tpSq: 6, uuid: 'SEQ4', id: '뱀', desc: '뱀뱀' }, { tpSq: 7, uuid: 'SEQ4', id: '고릴라', desc: '릴라릴라' }] } }
+  </script>
+</head>
+<body>
+  <p>
+    Dynamic Table 만들기
+  </p>
+  <table>
+    <thead id="column">
+      <tr>
+        <!-- 컬럼 출력 -->        
+      </tr>
+    </thead>
+    <tbody id="table">
+      <!-- 데이터 표로 출력 -->
+    </tbody>
+  </table>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<!-- <script type="module" src="./demo.js" defer></script> -->
+<script>
+
+  // mst, dtl 데이터를 이용하여 테이블 만들기
+  function getData(props) {
+    return props();
+  }
+  
+  // table 출력하기
+  function drawTable() {
+
+    const {dtl, mst} = getData(props);
+
+    console.log(dtl);
+    console.log(mst);
+
+    // mst - itemDc, subSumDc, col
+    let {itemDc, subSumDc, col} = mst;
+
+    let layout = itemDc.reduce((acc, curr, idx) => {
+      // c[0]: 타입
+      // c[1]: 순번
+      // c[2]: 부모순번
+      // c[3]: 텍스트
+      let c = curr.split(';');
+      let n = itemDc[idx + 1].split(';') | ['-1']; 
+
+      if(!before) acc.before = c[0];
+
+      let chk = Number(c[0]) - Number(n[0]);
+
+      if(chk === 0) { // 카테고리
+        
+      }
+      if(chk === -1) {
+
+      }
+      if(chk === -2) {
+
+      }
+
+      return acc;
+    }, {before: ''})
+
+    // dtl - 
+
+    // js, jquery 아무거나 쓰세요.
+    // js
+    let c = document.querySelector('#column');
+    // jquery
+    // let _c = $('#column');
+
+    // console.log(c)
+    // console.log(_c)
+
+    // 테이블 그리기 싫으면 구조체만 만들어도됨.
+  }
+  drawTable();
+
+</script>
+</html>
