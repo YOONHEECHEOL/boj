@@ -2,18 +2,29 @@ const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 let input = fs.readFileSync(filePath).toString().split("\n");
 
-const solution = (dot) => {
+const solution = (hp) => {
 
-    if(dot[0] > 0 && dot[1] > 0) return 1;
-    if(dot[0] < 0 && dot[1] > 0) return 2;
-    if(dot[0] < 0 && dot[1] < 0) return 3;
-    if(dot[0] > 0 && dot[1] < 0) return 4;
+    var answer = 0;
+    
+    let a, b, c;
+    
+    a = Math.floor(hp / 5);
+    
+    hp -= 5 * a;
+    
+    b = Math.floor(hp / 3);
+    
+    hp -= 3 * b;
+    
+    c = hp;
 
+    console.log(a, b, c)
+    
+    answer = a + b + c;
+    
+    return answer;
 }
   
 
-console.log(solution([2, 4]));	// 1, [x,y]
-
-
-
+console.log(solution(23)); // 5
 
