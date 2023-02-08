@@ -5,22 +5,118 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Demo</title>
+  <style>
+    table {
+      border: 1px solid #222;
+      border-collapse: collapse;
+    }
+    thead th {
+      background-color: #f1f1f1;
+    }
+    tbody td {
+      border: 1px solid #222;
+      padding: 12px;
+    }
+  </style>
   <script>
-    const props = () => { return { mst: { itemDc: ['0;0;-1;카테고리1', '1;1;0;범례1', '2;2;1;구분1', '1;3;0;범례2', '2;4;3;구분2', '2;5;3;구분3'], subSumDc: ['0;1;2', '0;3;5'], col: ['uuid', 'id', 'desc'] }, dtl: [{ tpSq: 2, uuid: 'SEQ0', id: '강아지', desc: '멍멍' }, { tpSq: 2, uuid: 'SEQ1', id: '고양이', desc: '냐옹' }, { tpSq: 4, uuid: 'SEQ2', id: '쥐', desc: '찍찍' }, { tpSq: 5, uuid: 'SEQ3', id: '코끼리', desc: '뿌우' }, { tpSq: 5, uuid: 'SEQ4', id: '사슴', desc: '사슴사슴' }, { tpSq: 6, uuid: 'SEQ4', id: '뱀', desc: '뱀뱀' }, { tpSq: 7, uuid: 'SEQ4', id: '고릴라', desc: '릴라릴라' }] } }
+    const props = () => { 
+      return { 
+        /**
+         * - [타입;순번;부모순번;텍스트]
+         * + 타입(0.카테고리, 1.범주, 2.구분)
+         * + 순번(타입순번)
+         * + 부모순번(없으면 -1)
+         * + 텍스트(사용자입력값)
+         */
+        mst: { 
+          itemDc: [
+            '0;0;-1;카테고리1',
+            '1;1;0;범례1',
+            '2;2;1;구분1',
+            '1;3;0;범례2',
+            '2;4;3;구분2',
+            '2;5;3;구분3'
+          ],
+          subSumDc: [
+            '0;1;2',
+            '0;3;5'
+          ], 
+          col: [
+            'uuid',
+            'id',
+            'desc'
+          ] 
+        }, 
+        dtl: [
+          { tpSq: 2, uuid: 'SEQ0', name: '강아지', desc: '멍멍' },
+          { tpSq: 2, uuid: 'SEQ1', name: '고양이', desc: '냐옹' },
+          { tpSq: 4, uuid: 'SEQ2', name: '쥐', desc: '찍찍' },
+          { tpSq: 5, uuid: 'SEQ3', name: '코끼리', desc: '뿌우' },
+          { tpSq: 5, uuid: 'SEQ4', name: '사슴', desc: '사슴사슴' },
+          { tpSq: 5, uuid: 'SEQ4', name: '뱀', desc: '뱀뱀' },
+          { tpSq: 5, uuid: 'SEQ4', name: '고릴라', desc: '릴라릴라' }
+        ] 
+      } 
+    }
   </script>
 </head>
 <body>
   <p>
     Dynamic Table 만들기
   </p>
-  <table>
+  <table style="border: 1px solid #222;">
     <thead id="column">
       <tr>
-        <!-- 컬럼 출력 -->        
+        <!-- 컬럼 출력 -->   
+        <th>범주</th>
+        <th>구분</th>
+        <th>uuid</th>     
+        <th>name</th>     
+        <th>desc</th>     
       </tr>
     </thead>
     <tbody id="table">
       <!-- 데이터 표로 출력 -->
+      <tr>
+        <td rowspan="2">2</td>
+        <td rowspan="2">2</td>
+        <td>SEQ0</td>
+        <td>강아지</td>
+        <td>멍멍</td>
+      </tr>
+      <tr>
+        <td>SEQ1</td>        
+        <td>고양이</td>        
+        <td>냐옹</td>        
+      </tr>
+      <tr>
+        <td rowspan="5">5</td>
+        <td rowspan="1">1</td>
+        <td>SEQ2</td>
+        <td>쥐</td>
+        <td>찍찍</td>
+      </tr>
+      <tr>
+        <td rowspan="4">4</td>
+        <td>SEQ3</td>
+        <td>코끼리</td>
+        <td>뿌우</td>
+      </tr>
+      <tr>
+        <td>SEQ4</td>
+        <td>사슴</td>
+        <td>사슴사슴</td>
+      </tr>
+      <tr>
+        <td>SEQ5</td>
+        <td>뱀</td>
+        <td>뱀뱀</td>
+      </tr>
+      <tr>
+        <td>SEQ6</td>
+        <td>고릴라</td>
+        <td>릴라릴라</td>
+      </tr>
     </tbody>
   </table>
 </body>
@@ -44,30 +140,18 @@
     // mst - itemDc, subSumDc, col
     let {itemDc, subSumDc, col} = mst;
 
-    let layout = itemDc.reduce((acc, curr, idx) => {
-      // c[0]: 타입
-      // c[1]: 순번
-      // c[2]: 부모순번
-      // c[3]: 텍스트
-      let c = curr.split(';');
-      let n = itemDc[idx + 1].split(';') | ['-1']; 
-
-      if(!before) acc.before = c[0];
-
-      let chk = Number(c[0]) - Number(n[0]);
-
-      if(chk === 0) { // 카테고리
-        
+    let itemGroup = [];
+    let subSumData = [];
+    let 임시카테고리값 = 0;
+    let 임시범주값 = 0;
+    let 임시구분값 = 0;
+    for(let i=0;i<mst.itemDc.length;i++) {
+      let tp = mst.itemDc[i].split(';')[0];
+      console.log(tp);
+      for(let j=0;j< dtl.length;j++) {
+        console.log(dtl[j])
       }
-      if(chk === -1) {
-
-      }
-      if(chk === -2) {
-
-      }
-
-      return acc;
-    }, {before: ''})
+    }
 
     // dtl - 
 
