@@ -2,29 +2,23 @@ const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 let input = fs.readFileSync(filePath).toString().split("\n");
 
-const solution = (hp) => {
+const solution = (balls, share) => {
 
-    var answer = 0;
+    function factorial(n) {
+        let result = BigInt(1);
+        for (let i = 1; i <= n; i++) {
+            result *= BigInt(i);
+        }
+        return result;
+    }
     
-    let a, b, c;
-    
-    a = Math.floor(hp / 5);
-    
-    hp -= 5 * a;
-    
-    b = Math.floor(hp / 3);
-    
-    hp -= 3 * b;
-    
-    c = hp;
+    function s(balls, share) {
+        return factorial(balls) / (factorial(share) * factorial(balls - share));
+    }
 
-    console.log(a, b, c)
-    
-    answer = a + b + c;
-    
-    return answer;
+    return s(balls, share);
 }
   
 
-console.log(solution(23)); // 5
+console.log(solution(30, 29)); // 1
 

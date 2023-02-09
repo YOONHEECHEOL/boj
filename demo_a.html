@@ -48,22 +48,22 @@
           ] 
         }, 
         dtl: [
-          { tpSq: 2, uuid: 'SEQ0', name: '강아지', desc: '멍멍' },
-          { tpSq: 2, uuid: 'SEQ1', name: '고양이', desc: '냐옹' },
-          { tpSq: 4, uuid: 'SEQ2', name: '쥐', desc: '찍찍' },
-          { tpSq: 5, uuid: 'SEQ3', name: '코끼리', desc: '뿌우' },
-          { tpSq: 5, uuid: 'SEQ4', name: '사슴', desc: '사슴사슴' },
-          { tpSq: 5, uuid: 'SEQ4', name: '뱀', desc: '뱀뱀' },
-          { tpSq: 5, uuid: 'SEQ4', name: '고릴라', desc: '릴라릴라' }
+          { tpSq: 2, uuid: 'SEQ0', name: '강아지', desc: '멍멍', 범주: 2, 구분: 2 },
+          { tpSq: 2, uuid: 'SEQ1', name: '고양이', desc: '냐옹', 범주: 0, 구분: 0},
+          { tpSq: 4, uuid: 'SEQ2', name: '쥐', desc: '찍찍', 범주: 5, 구분: 1 },
+          { tpSq: 5, uuid: 'SEQ3', name: '코끼리', desc: '뿌우', 범주: 0, 구분: 4 },
+          { tpSq: 5, uuid: 'SEQ4', name: '사슴', desc: '사슴사슴', 범주: 0, 구분: 0 },
+          { tpSq: 5, uuid: 'SEQ4', name: '뱀', desc: '뱀뱀', 범주: 0, 구분: 0  },
+          { tpSq: 5, uuid: 'SEQ4', name: '고릴라', desc: '릴라릴라', 범주: 0, 구분: 0 }
         ] 
       } 
     }
   </script>
 </head>
 <body>
-  <p>
+  <!-- <p>
     Dynamic Table 만들기
-  </p>
+  </p> -->
   <table style="border: 1px solid #222;">
     <thead id="column">
       <tr>
@@ -147,9 +147,29 @@
     let 임시구분값 = 0;
     for(let i=0;i<mst.itemDc.length;i++) {
       let tp = mst.itemDc[i].split(';')[0];
+      let ix = mst.itemDc[i].split(';')[1];
+      let pr = mst.itemDc[i].split(';')[2];
+      let dc = mst.itemDc[i].split(';')[3];
+      
       console.log(tp);
+      let catg = [];
+      if(tp === 0) {
+        catg = [];
+      }
       for(let j=0;j< dtl.length;j++) {
         console.log(dtl[j])
+        if(dtl[j]) {
+          if(tp === 1) {
+            dtl[j].범주 = tp;
+            임시범례값++;
+          }
+          if(tp === 2 && dtl[j].tpSq === ix) {
+            dtl[j].구분 = tp;
+            임시구분값++;
+          }
+  
+          catg.push(dtl[j]);
+        }
       }
     }
 
